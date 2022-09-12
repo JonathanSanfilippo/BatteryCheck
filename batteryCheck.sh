@@ -5,7 +5,7 @@
 # Copyright (C) 2022 Jonathan Sanfilippo <jonathansanfilippo.uk@gmail.com>
 # dependencies upower
 
-ICON="$HOME/.local/share/Battery/*.svg"
+ICON="$HOME/.local/share/Battery/icon.svg"
 
 
 get_Variables(){
@@ -17,17 +17,18 @@ REF=$(echo "discharging")
 while true; do
 get_Variables
 
-if (("$STATUS" == $REF)); then
-   if [ "$BAT" -lt 5 ]; then
-      notify-send -i "$ICON"  -a "Battery" "The system has been suspended based on low battery level  $BAT%" -u  critical ; 
-      systemctl suspend
+if [ "$STATUS" == "$REF" ]; then
+        if [ "$BAT" -lt 5 ]; then
+              notify-send -i "$ICON"  -a "Battery" "The system has been suspended based on low battery level  $BAT%" -u  critical ; 
+              systemctl suspend
 
-   elif [ "$BAT" -lt 10 ]; then
-      notify-send -i "$ICON"  -a "Battery" "Battery low!  $BAT%" -u  normal -t 5000 ; 
-      play $HOME/.local/share/Battery/*.ogg;
-   else
-   echo "failed"
-   fi
+        elif [ "$BAT" -lt 15 ]; then
+              notify-send -i "$ICON"  -a "Battery" "Battery low!  $BAT%" -u  critical ; 
+              play $HOME/.local/share/Battery/audio.ogg ;
+        fi
+else
+echo 'charging'
 fi
 sleep 60
+get_Variables
 done
